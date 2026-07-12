@@ -1,0 +1,7 @@
+# Peter Shin (G01073633)
+# Python dependencies for the survey REST API backend.
+fastapi
+uvicorn[standard]
+sqlmodel
+pymysql
+cryptography

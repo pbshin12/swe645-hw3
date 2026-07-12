@@ -1,6 +1,8 @@
 // Author: Peter Shin (pshin2, G01073633)
-// Student survey form: personal info and campus feedback.
+// Student survey form: personal info and campus feedback. Creates a new survey
+// via the API, or updates an existing one when passed a survey to edit.
 import { useState } from 'react'
+import { createSurvey, updateSurvey, toApiPayload } from '../api.js'
 
 const LIKE_OPTIONS = [
   { id: 'students', label: 'Students' },
@@ -33,8 +35,11 @@ const EMPTY_FORM = {
   recommendation: '',
 }
 
-function SurveyForm() {
-  const [form, setForm] = useState(EMPTY_FORM)
+// `editing`: form-shaped survey (with id) to prefill for an update, or null to
+// create. `onSaved`: called after a successful save.
+function SurveyForm({ editing = null, onSaved = null }) {
+  const [form, setForm] = useState(editing ?? EMPTY_FORM)
+  const [saving, setSaving] = useState(false)
 
   const setField = (name, value) =>
     setForm((prev) => ({ ...prev, [name]: value }))
@@ -47,14 +52,27 @@ function SurveyForm() {
         : [...prev.likes, id],
     }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // TODO: POST the form to the backend survey API once it exists
-    console.log('Survey submission:', form)
-    alert('Survey submitted! (Backend not wired up yet — data logged to the console.)')
+    setSaving(true)
+    try {
+      if (editing?.id) {
+        await updateSurvey(editing.id, toApiPayload(form))
+        alert(`Survey #${editing.id} updated!`)
+      } else {
+        await createSurvey(toApiPayload(form))
+        alert('Survey submitted — thank you!')
+        setForm(EMPTY_FORM)
+      }
+      onSaved?.()
+    } catch (err) {
+      alert(`Saving the survey failed: ${err.message}`)
+    } finally {
+      setSaving(false)
+    }
   }
 
-  const handleReset = () => setForm(EMPTY_FORM)
+  const handleReset = () => setForm(editing ?? EMPTY_FORM)
 
   return (
     <form onSubmit={handleSubmit}>
@@ -242,15 +260,17 @@ function SurveyForm() {
           onChange={(e) => setField('recommendation', e.target.value)}
         >
           <option value="" disabled>Select an option</option>
-          <option value="very-likely">Very Likely</option>
-          <option value="likely">Likely</option>
-          <option value="unlikely">Unlikely</option>
+          <option value="Very Likely">Very Likely</option>
+          <option value="Likely">Likely</option>
+          <option value="Unlikely">Unlikely</option>
         </select>
       </div>
 
       {/* Buttons */}
       <div className="d-flex gap-2">
-        <button type="submit" className="btn btn-light fw-bold">Submit</button>
+        <button type="submit" className="btn btn-light fw-bold" disabled={saving}>
+          {saving ? 'Saving…' : editing ? 'Update' : 'Submit'}
+        </button>
         <button type="button" className="btn btn-outline-secondary" onClick={handleReset}>
           Reset
         </button>

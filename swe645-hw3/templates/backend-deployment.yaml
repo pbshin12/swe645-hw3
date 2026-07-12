@@ -1,0 +1,45 @@
+# Peter Shin (G01073633)
+# Helm template for the Deployment running the FastAPI survey backend pods.
+# Uses a distinct app.kubernetes.io/name label so the frontend Service does not
+# select these pods.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "swe645-hw3.fullname" . }}-backend
+  labels:
+    {{- include "swe645-hw3.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "swe645-hw3.name" . }}-backend
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "swe645-hw3.name" . }}-backend
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag | default .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.service.targetPort }}
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ .Values.backend.dbSecretName }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5

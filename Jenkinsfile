@@ -19,6 +19,7 @@ pipeline {
             steps {
                 script {
                     dockerFrontendImage = docker.build("${DOCKER_FRONTEND_REPO}:${BUILD_NUMBER}", "./frontend")
+                    dockerBackendImage = docker.build("${DOCKER_BACKEND_REPO}:${BUILD_NUMBER}", "./backend")
                 }
             }
         }
@@ -27,6 +28,7 @@ pipeline {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds') {
                         dockerFrontendImage.push()
+                        dockerBackendImage.push()
                     }
                 }
             }

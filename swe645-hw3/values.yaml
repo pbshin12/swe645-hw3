@@ -59,6 +59,25 @@ service:
   targetPort: 80
   nodePort: 30610
 
+# Backend (FastAPI survey REST API). The frontend keeps the top-level values
+# above; everything backend-specific lives in this block.
+backend:
+  replicaCount: 1
+  image:
+    repository: frozenmandu/swe645-hw3-backend
+    pullPolicy: Always
+    # Empty tag falls back to the top-level image.tag, so Jenkins's single
+    # --set image.tag=<BUILD_NUMBER> moves both images together.
+    tag: ""
+  service:
+    type: NodePort
+    port: 8000
+    targetPort: 8000
+    nodePort: 30611
+  # Name of the pre-created Secret holding DATABASE_URL (created manually with
+  # kubectl on the cluster; the RDS password is never committed to git).
+  dbSecretName: swe645-hw3-db
+
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: false
