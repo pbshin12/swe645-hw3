@@ -1,4 +1,5 @@
-# Default values for swe645-hw3.
+# Peter Shin (G01073633)
+# Default configuration values for the swe645-hw3 Helm chart (image, replicas, service ports, probes).
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 

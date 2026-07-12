@@ -1,3 +1,5 @@
+// Peter Shin (pshin2, G01073633)
+// ESLint configuration: recommended JS + React hooks rules for the project's .js/.jsx files.
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'

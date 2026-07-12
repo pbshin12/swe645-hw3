@@ -1,4 +1,9 @@
 {{/*
+Peter Shin (G01073633)
+Named template helpers (chart name, fullname, labels) shared by the chart's manifests.
+*/}}
+
+{{/*
 Expand the name of the chart.
 */}}
 {{- define "swe645-hw3.name" -}}

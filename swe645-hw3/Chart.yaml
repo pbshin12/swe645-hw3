@@ -1,6 +1,8 @@
+# Peter Shin (G01073633)
+# Helm chart metadata for the SWE645 HW3 student survey application.
 apiVersion: v2
 name: swe645-hw3
-description: SWE645 HW3 frontend (student survey site) — nginx serving index.html, exposed via NodePort
+description: SWE645 HW3 student survey application — React frontend served by nginx, exposed via NodePort
 
 # A chart can be either an 'application' or a 'library' chart.
 #

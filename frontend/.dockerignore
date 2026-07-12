@@ -1,2 +1,4 @@
+# Peter Shin (G01073633)
+# Excludes host-installed dependencies and build output from the Docker build context.
 **/node_modules
 **/dist
