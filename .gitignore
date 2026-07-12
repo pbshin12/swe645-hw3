@@ -1,3 +1,5 @@
 .env
 CLAUDE.md
 **/submission
+__pycache__/
+*.pyc

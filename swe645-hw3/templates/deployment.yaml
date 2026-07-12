@@ -7,9 +7,7 @@ metadata:
   labels:
     {{- include "swe645-hw3.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "swe645-hw3.selectorLabels" . | nindent 6 }}
