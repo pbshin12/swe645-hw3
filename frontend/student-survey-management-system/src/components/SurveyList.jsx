@@ -3,6 +3,24 @@
 import { useEffect, useState } from 'react'
 import { listSurveys, deleteSurvey } from '../api.js'
 
+// Display labels for the liked_most ids stored by the survey form.
+const LIKE_LABELS = {
+  students: 'Students',
+  location: 'Location',
+  campus: 'Campus',
+  atmosphere: 'Atmosphere',
+  dorms: 'Dorm Rooms',
+  sports: 'Sports',
+}
+
+const formatLikes = (likedMost) =>
+  likedMost
+    ? likedMost
+        .split(',')
+        .map((id) => LIKE_LABELS[id] ?? id)
+        .join(', ')
+    : '—'
+
 function SurveyList({ onEdit }) {
   const [surveys, setSurveys] = useState(null) // null = still loading
   const [error, setError] = useState(null)
@@ -58,6 +76,7 @@ function SurveyList({ onEdit }) {
             <th>City</th>
             <th>Email</th>
             <th>Date</th>
+            <th>Liked Most</th>
             <th>Recommends?</th>
             <th></th>
           </tr>
@@ -74,6 +93,7 @@ function SurveyList({ onEdit }) {
               </td>
               <td>{s.email}</td>
               <td>{s.survey_date}</td>
+              <td>{formatLikes(s.liked_most)}</td>
               <td>{s.recommendation}</td>
               <td className="text-end text-nowrap">
                 <button
