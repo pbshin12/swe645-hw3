@@ -13,7 +13,7 @@ DATABASE_URL = os.environ["DATABASE_URL"]
 
 # pool_pre_ping/pool_recycle keep pooled connections valid across MySQL's
 # idle-connection timeouts.
-engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=280, echo=True)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=280)
 
 
 def init_db(retries: int = 30, delay_seconds: float = 2.0) -> None:
