@@ -96,10 +96,9 @@ cd swe645-hw3
 helm lint ./swe645-hw3                          # validate the chart
 helm template swe645-hw3 ./swe645-hw3 | less    # preview rendered manifests (optional)
 
-# One-time: create the Secret with the database connection URL (see §5 for the
+# One-time: create the Secret with the database connection URL (see part 5 for the
 # RDS setup that produces the endpoint/password — never committed to git).
-# Keep the single quotes; if the password contains @ : / or %, percent-encode
-# those characters (e.g. @ → %40).
+# Keep the single quotes
 kubectl create secret generic swe645-hw3-db \
   --from-literal=DATABASE_URL='mysql+pymysql://admin:<password>@<rds-endpoint>:3306/surveys'
 
@@ -161,7 +160,7 @@ The backend stores surveys in a MySQL database on Amazon RDS, outside the cluste
 
 1. **RDS → Create database** → *Standard create* → Engine: **MySQL** (8.0.x).
 2. **Template: Free tier** (or *Dev/Test* with **Single-AZ** deployment). Do **not** use the Production template — it defaults to Multi-AZ and incurs real charges.
-3. **Settings**: DB instance identifier `swe645-hw3-db`, master username `admin`, self-managed master password (save it — it goes into a Kubernetes Secret in step 4 below, and is never committed to git).
+3. **Settings**: DB instance identifier `swe645-hw3-db`, master username `admin`, self-managed master password (save it — it goes into a Kubernetes Secret in step 4 below, and is never committed to git, see sample code in section 3).
 4. **Instance & storage**: `db.t4g.micro` (or `db.t3.micro`), 20 GiB gp3, **disable storage autoscaling**.
 5. **Connectivity**: choose **"Connect to an EC2 compute resource"** and select the cluster's EC2 instance — the console places the database in the same VPC and wires up the security groups (inbound TCP 3306 from the instance) automatically. Public access stays **No**; the database is reachable only from inside the VPC.
 6. **Additional configuration**: set *Initial database name* to `surveys`; disable automated backups, enhanced monitoring, and deletion protection (dev-only instance).
